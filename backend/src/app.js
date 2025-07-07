@@ -1,11 +1,9 @@
 import express from "express";
-import { nanoid } from "nanoid";
 const app = express();
 const PORT = process.env.PORT;
 import connectDB from "./config/mongodb.config.js";
 import dotenv from "dotenv";
 dotenv.config("./.evn");
-import UrlSchema from "./models/short_url.model.js";
 
 // Parses incoming JSON
 // Express.js application sets up middleware to parse incoming URL-encoded data,
@@ -13,37 +11,13 @@ import UrlSchema from "./models/short_url.model.js";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post("/api/create", async (req, res) => {
-  try {
-    const { url } = req.body;
-    const shortUrl = nanoid(7);
-    const newUrl = new UrlSchema({
-      full_url: url,
-      short_url: shortUrl,
-    });
-    await newUrl.save();
-    res.status(201).json({
-      message: "Database inserted successfully!",
-      data: shortUrl,
-    });
-  } catch (error) {
-    console.error("Error inserting into database:", error.message);
-    res.status(500).json({
-      message: "Failed to insert into database",
-      error: error.message,
-    });
-  }
-});
+// import all rountes
+import urlRoutes from "./routes/short_url.route.js";
+import { redirectShortUrlToFullUrl } from "./controllers/short_url.controller.js";
 
-app.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  const url = await UrlSchema.findOne({ short_url: id });
-  if (url) {
-    res.redirect(url.full_url);
-  } else {
-    res.status(404).send("Not found!");
-  }
-});
+// routes declaration
+app.use("/api/create", urlRoutes);
+app.get("/:id", redirectShortUrlToFullUrl);
 
 connectDB()
   .then(() => {
