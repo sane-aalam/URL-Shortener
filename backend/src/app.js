@@ -1,23 +1,42 @@
 import express from "express";
 import { nanoid } from "nanoid";
-import dotenv from "dotenv";
 const app = express();
 const PORT = process.env.PORT;
 import connectDB from "./config/mongodb.config.js";
-dotenv.config();
+import dotenv from "dotenv";
+dotenv.config("./.evn");
+import UrlSchema from "./models/short_url.model.js";
 
-app.get("/createURL", (req, res) => {
-  const generateString = nanoid(7);
-  res.json({
-    msg: "successfully called done",
-    str: generateString,
-    return: 1,
-  });
+// Parses incoming JSON
+// Express.js application sets up middleware to parse incoming URL-encoded data, typically from HTML form submissions.
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.post("/api/create", async (req, res) => {
+  try {
+    const { url } = req.body;
+    const shortUrl = nanoid(7);
+    const newUrl = new UrlSchema({
+      full_url: url,
+      short_url: shortUrl,
+    });
+    await newUrl.save();
+    res.status(201).json({
+      message: "Database inserted successfully!",
+      data: shortUrl,
+    });
+  } catch (error) {
+    console.error("Error inserting into database:", error.message);
+    res.status(500).json({
+      message: "Failed to insert into database",
+      error: error.message,
+    });
+  }
 });
 
 connectDB()
   .then(() => {
-    app.listen(PORT || 3000, () => {
+    app.listen(PORT, () => {
       console.log(`⚙️ Server is running at port : ${PORT}`);
     });
   })
