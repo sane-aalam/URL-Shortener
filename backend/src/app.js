@@ -1,9 +1,14 @@
 import express from "express";
 const app = express();
 const port = 3000;
+import { nanoid } from "nanoid";
 
-app.get("/", (req, res) => {
-  res.send("Hello world!");
+app.get("/createURL", (req, res) => {
+  const generateString = nanoid(7);
+  res.json({
+    msg: "successfully called done",
+    str: generateString,
+  });
 });
 
 app.listen(port, () => {
