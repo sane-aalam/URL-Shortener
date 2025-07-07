@@ -8,7 +8,8 @@ dotenv.config("./.evn");
 import UrlSchema from "./models/short_url.model.js";
 
 // Parses incoming JSON
-// Express.js application sets up middleware to parse incoming URL-encoded data, typically from HTML form submissions.
+// Express.js application sets up middleware to parse incoming URL-encoded data,
+// typically from HTML form submissions.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,6 +32,16 @@ app.post("/api/create", async (req, res) => {
       message: "Failed to insert into database",
       error: error.message,
     });
+  }
+});
+
+app.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const url = await UrlSchema.findOne({ short_url: id });
+  if (url) {
+    res.redirect(url.full_url);
+  } else {
+    res.status(404).send("Not found!");
   }
 });
 
