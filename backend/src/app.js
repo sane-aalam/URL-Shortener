@@ -3,6 +3,7 @@ const app = express();
 const PORT = process.env.PORT;
 import connectDB from "./config/mongodb.config.js";
 import dotenv from "dotenv";
+import { errorHandler } from "./services/ApiError.js";
 dotenv.config("./.evn");
 
 // Parses incoming JSON
@@ -18,6 +19,9 @@ import { redirectShortUrlToFullUrl } from "./controllers/short_url.controller.js
 // routes declaration
 app.use("/api/create", urlRoutes);
 app.get("/:shortUrl", redirectShortUrlToFullUrl);
+
+// Error handler — should be last
+app.use(errorHandler);
 
 connectDB()
   .then(() => {
