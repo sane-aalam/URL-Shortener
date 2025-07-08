@@ -1,9 +1,10 @@
 import './App.css'
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <>
-      <p className="bg-pink-500">App level</p>
+      <HomePage />
     </>
   )
 }
