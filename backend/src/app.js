@@ -17,7 +17,7 @@ import { redirectShortUrlToFullUrl } from "./controllers/short_url.controller.js
 
 // routes declaration
 app.use("/api/create", urlRoutes);
-app.get("/:id", redirectShortUrlToFullUrl);
+app.get("/:shortUrl", redirectShortUrlToFullUrl);
 
 connectDB()
   .then(() => {

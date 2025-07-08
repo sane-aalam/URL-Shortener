@@ -19,6 +19,9 @@ export const saveShortUrl = async (shortUrl, longUrl, userId) => {
 // It is a design pattern used to separate the low-level data access logic
 
 export const getShortUrl = async (shortUrl) => {
-  const url = await UrlSchema.findOne({ short_url: shortUrl });
+  const url = await UrlSchema.findOneAndUpdate(
+    { short_url: shortUrl },
+    { $inc: { clicks: 1 } }
+  );
   return url;
 };
