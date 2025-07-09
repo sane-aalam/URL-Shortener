@@ -5,12 +5,14 @@ import connectDB from "./config/mongodb.config.js";
 import dotenv from "dotenv";
 import { errorHandler } from "./services/ApiError.js";
 dotenv.config("./.evn");
+import cors from "cors";
 
 // Parses incoming JSON
 // Express.js application sets up middleware to parse incoming URL-encoded data,
 // typically from HTML form submissions.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // import all rountes
 import urlRoutes from "./routes/short_url.route.js";
