@@ -6,6 +6,7 @@ const UrlForm = () => {
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState("");
     const [shortUrl, setShortUrl] = useState("");
+    const [copied, setCopied] = useState(false);
 
     const handleSubmit = async () => {
         try {
@@ -17,6 +18,14 @@ const UrlForm = () => {
         } catch (err) {
             console.error("Error:", err.response?.data?.message || err.message);
         }
+    }
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(shortUrl);
+        setCopied(true);
+        setTimeout(() => {
+            setCopied(false);
+        }, 1500);
     }
 
     return (
@@ -41,16 +50,27 @@ const UrlForm = () => {
             {shortUrl && (
                 <div className="mt-6 text-center">
                     <p className="text-gray-600 mb-2">Here's your short URL:</p>
-                    <a
-                        href={shortUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 font-medium hover:underline"
-                    >
-                        {shortUrl}
-                    </a>
+
+                    <div className="flex items-center justify-between space-x-2">
+                        <a
+                            href={shortUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 ml-4 font-medium hover:underline break-all"
+                        >
+                            {shortUrl}
+                        </a>
+
+                        <button
+                            onClick={handleCopy}
+                            className="px-3 py-1 text-sm text-white bg-gray-500 rounded hover:bg-blue-500 transition"
+                        >
+                            {copied ? 'Copied!' : 'Copy'}
+                        </button>
+                    </div>
                 </div>
             )}
+
         </div>
     )
 }
