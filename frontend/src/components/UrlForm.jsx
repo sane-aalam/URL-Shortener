@@ -10,6 +10,7 @@ const UrlForm = () => {
 
     const handleSubmit = async () => {
         try {
+            setLoading(true) // start Loading
             const { data } = await axios.post("http://localhost:3000/api/create", { url });
             const { link, msg } = data;
             console.log(link);
@@ -17,12 +18,15 @@ const UrlForm = () => {
             setShortUrl(link)
         } catch (err) {
             console.error("Error:", err.response?.data?.message || err.message);
+        } finally {
+            setLoading(false);  // Stop loading
         }
     }
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shortUrl);
         setCopied(true);
+
         setTimeout(() => {
             setCopied(false);
         }, 1500);
@@ -37,13 +41,14 @@ const UrlForm = () => {
                 value={url}
                 onChange={(event) => setUrl(event.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-xl px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full border border-gray-300 rounded-xl px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <button
                 type="submit"
                 onClick={handleSubmit}
-                className="w-full bg-pink-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-pink-700 transition">
+                disabled={loading}
+                className="w-full bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700 transition">
                 {loading ? "Shortening..." : "Shorten URL"}
             </button>
 
@@ -63,7 +68,7 @@ const UrlForm = () => {
 
                         <button
                             onClick={handleCopy}
-                            className="px-3 py-1 text-sm text-white bg-gray-500 rounded hover:bg-blue-500 transition"
+                            className="px-3 py-1 text-sm text-white bg-gray-600 rounded active:bg-blue-600 focus:bg-blue-600 transition"
                         >
                             {copied ? 'Copied!' : 'Copy'}
                         </button>
