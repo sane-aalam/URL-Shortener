@@ -7,7 +7,7 @@ import { asyncWrapper } from "../services/AsyncWrapper.js";
 export const createShortUrl = asyncWrapper(async (req, res) => {
   const { url } = req.body;
   const shortUrl = await createShortUrlWithoutUser(url);
-  res.json({
+  res.status(200).json({
     link: process.env.APP_URL + shortUrl,
     msg: "Short URL created successfully.",
   });
