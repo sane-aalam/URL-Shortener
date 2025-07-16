@@ -1,9 +1,4 @@
-// import mongoose
-// create Schema & create model
-// export model
-
 import mongoose from "mongoose";
-import validator from "validator";
 
 const userSchema = new mongoose.Schema(
   {
@@ -20,21 +15,11 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      validator(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error("emailId is not Valid");
-        }
-      },
     },
     password: {
       type: String,
       required: true,
       unique: true,
-      validate(value) {
-        if (!validator.isStrongPassword(value)) {
-          throw new Error("emailId is not Valid");
-        }
-      },
     },
     avtar: {
       type: String, // dummy avtar pic
